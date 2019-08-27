@@ -1,5 +1,5 @@
-const {ipcRenderer} = require('electron')
+//const {ipcRenderer} = require('electron')
 document.querySelector('form').addEventListener('submit', (event) => {
-  console.log('new window');
-  ipcRenderer.send('create_second_window')
+  let random_number = Math.random()
+  document.querySelector('#output').innerText = random_number
 })

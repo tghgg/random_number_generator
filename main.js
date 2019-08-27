@@ -27,8 +27,3 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-ipcMain.on('create_second_window', (event) => {
-  secondWindow = new BrowserWindow({width:100, height:100})
-  secondWindow.loadFile("./secondWindow.html")
-})
