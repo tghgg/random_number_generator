@@ -3,21 +3,21 @@ let mainWindow, htmlPath, secondWindow
 const process = require('process')
 const path = require('path')
 app.on('ready', () => {
-  console.log('app is ready')
+  console.log('Using Node.js ' + process.versions.node + ', Electron ' + process.versions.electron + '.')
   mainWindow = new BrowserWindow({width: 600,
     height: 650,
-    show: true,
-    resizeable: false,
+    show: true,  // delay show to wait for the content to fully load
+    resizable: false,
     webPreferences:
-    {nodeIntegration: true}  //extremely important as this makes main.js constants global for external scripts
-  }) //show false for best practices
+    {nodeIntegration: true}, //extremely important as this makes main.js constants global for external scripts
+  })
   htmlPath = path.join(__dirname, 'index.html')
   mainWindow.loadFile(htmlPath)
   //mainWindow.webContents.openDevTools()
 })
 
 //show the app once all loaded
-//mainWindow.once('ready-to-show', () => {
+//mainWindow.on('ready-to-show', () => {
   //mainWindow.show()
   //console.log('show')
 //})
