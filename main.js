@@ -2,6 +2,7 @@ const {app, BrowserWindow, ipcRenderer, ipcMain, Menu} = require('electron')
 const process = require('process')
 const path = require('path')
 let mainWindow, htmlPath, secondWindow
+// the menu object consists of objects in an array containing labels and/or submenus
 let template = [{
   label: "Menu 1",
   submenu: [{
