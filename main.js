@@ -1,9 +1,24 @@
-const {app, BrowserWindow, ipcRenderer, ipcMain} = require('electron')
-let mainWindow, htmlPath, secondWindow
+const {app, BrowserWindow, ipcRenderer, ipcMain, Menu} = require('electron')
 const process = require('process')
 const path = require('path')
+let mainWindow, htmlPath, secondWindow
+let template = [{
+  label: "Menu 1",
+  submenu: [{
+    label: "Item 1",
+  }]}, {
+    label: "Menu 2",
+    submenu: [{
+      label: "Nested inside Menu 2"
+    }, {
+      label: "Also nested"
+    }]
+  }
+  ]
 app.on('ready', () => {
   console.log('Using Node.js ' + process.versions.node + ', Electron ' + process.versions.electron + '.')
+  const menu = Menu.buildFromTemplate(template)  // electron can create a menu object from a template so we don't have to list each item ourselves
+  Menu.setApplicationMenu(menu)
   mainWindow = new BrowserWindow({width: 600,
     height: 650,
     x: 0,  // set x, y coordinates of mainWindow's upper left corner like in Godot
