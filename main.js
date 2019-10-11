@@ -1,6 +1,7 @@
-const {app, BrowserWindow, ipcRenderer, ipcMain, Menu} = require('electron')
+const {app, BrowserWindow, ipcRenderer, ipcMain, Menu, remote} = require('electron')
 const process = require('process')
 const path = require('path')
+
 let mainWindow, htmlPath, secondWindow
 // the menu object consists of objects in an array containing labels and/or submenus
 let template = [{
@@ -10,12 +11,57 @@ let template = [{
   }]}, {
     label: "Menu 2",
     submenu: [{
-      label: "Nested inside Menu 2"
+      label: "Nested inside Menu 2",
+      submenu: [{label: "Final Boss",
+      click: (menuItem, browserWindow, event) => {
+        if (browserWindow === secondWindow) {
+          mainWindow.webContents.send('scam_text')
+          console.log('successful')
+        }
+      }, type: "checkbox", checked: true}] // check box list
     }, {
-      label: "Also nested"
+      type: "separator" // basically a <hr> in the submenu list
+    }, {
+      label: "Also nested",
+      type: 'radio'  //checkbox where one item must always be chosen
     }]
   }
   ]
+
+
+//let contextualMenu = remote.Menu.buildFromTemplate(  // create a contextual menu, one that is created when the user right clicks
+//  [{label: "THIS IS A PYRAMID SCHEME"}, {label: "WHY AREN'T YOU RUNNING AWAY FROM THIS CRAP"}, {label: "HOLY FUCKING LORD"}]
+//)
+window.addEventListener('contextmenu', (event) => {
+  event.preventDefault()
+  contextualMenu.popup()
+})
+
+
+if (process.platform === "win32") {
+  let name = app.getName()
+  template.unshift({
+    label: name,
+    submenu: [{
+      label: "About",
+      click: (menuItem, browserWindow, event) => { // electron automatically adds 3 arguments to our click function call
+        secondWindow = new BrowserWindow({
+          width: 400,
+          height: 300,
+          alwaysOnTop: true,
+          resizable: false,
+        })
+        secondWindow.loadFile("./secondWindow.html")
+      }
+    }, {
+      label: "Quit",
+      accelerator: "CommandorControl+Q", // binds quit function to cmd-q
+      //click: () => {app.quit()}
+      // we can replace the click above with the prebuilt role: 'quit'
+      role: 'quit'
+    }]
+  })
+}
 app.on('ready', () => {
   console.log('Using Node.js ' + process.versions.node + ', Electron ' + process.versions.electron + '.')
   const menu = Menu.buildFromTemplate(template)  // electron can create a menu object from a template so we don't have to list each item ourselves
@@ -35,7 +81,7 @@ app.on('ready', () => {
   })
   htmlPath = path.join(__dirname, 'index.html')
   mainWindow.loadFile(htmlPath)
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 })
 
 //show the app once all loaded
