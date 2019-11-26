@@ -32,10 +32,6 @@ let template = [{
 //let contextualMenu = remote.Menu.buildFromTemplate(  // create a contextual menu, one that is created when the user right clicks
 //  [{label: "THIS IS A PYRAMID SCHEME"}, {label: "WHY AREN'T YOU RUNNING AWAY FROM THIS CRAP"}, {label: "HOLY FUCKING LORD"}]
 //)
-window.addEventListener('contextmenu', (event) => {
-  event.preventDefault()
-  contextualMenu.popup()
-})
 
 
 if (process.platform === "win32") {
