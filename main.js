@@ -1,3 +1,4 @@
+// Get these properties from the electron module
 const {app, BrowserWindow, ipcRenderer, ipcMain, Menu, remote} = require('electron')
 const process = require('process')
 const path = require('path')
@@ -57,7 +58,30 @@ if (process.platform === "win32") {
       role: 'quit'
     }]
   })
+} else if (process.platform='linux') {
+  let name = app.getName()
+  template.unshift({
+    label: name + ' Linux',
+    submenu: [{
+      label: "About",
+      click: (menuItem, browserWindow, event) => {
+        secondWindow = new BrowserWindow({
+          width: 400,
+          height: 300,
+          alwaysOnTop: true,
+          resizable: false
+        })
+        secondWindow.loadFile("./secondWindow.html")
+      }},
+      {
+        label: "Quit",
+        role: "Quit"
+      }]
+    }
+  )
 }
+
+// When app is ready to load resources, do so
 app.on('ready', () => {
   console.log('Using Node.js ' + process.versions.node + ', Electron ' + process.versions.electron + '.')
   const menu = Menu.buildFromTemplate(template)  // electron can create a menu object from a template so we don't have to list each item ourselves
@@ -81,10 +105,10 @@ app.on('ready', () => {
 })
 
 //show the app once all loaded
-//mainWindow.on('ready-to-show', () => {
-  //mainWindow.show()
-  //console.log('show')
-//})
+mainWindow.on('ready-to-show', () => {
+  mainWindow.show()
+  console.log('show')
+})
 //quit app when close for Mac users
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') { // darwin is macOS win32 for Windows
